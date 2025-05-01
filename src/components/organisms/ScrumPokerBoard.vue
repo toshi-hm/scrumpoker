@@ -13,8 +13,8 @@ import { usePokerStatistics } from '../../composables/usePokerStatistics'
  * @property {number | string} value - 見積もり値
  */
 interface Estimate {
-    userId: string
-    value: number | string
+  userId: string
+  value: number | string
 }
 
 /**
@@ -42,62 +42,55 @@ const { average, median, min, max, mode } = usePokerStatistics(estimates, isOpen
  * @param {number | string} value - 選択された値
  */
 const handleSelect = (value: number | string) => {
-    const existingEstimateIndex = estimates.value.findIndex(
-        (e) => e.userId === currentUserId
-    )
+  const existingEstimateIndex = estimates.value.findIndex((e) => e.userId === currentUserId)
 
-    if (existingEstimateIndex !== -1) {
-        estimates.value[existingEstimateIndex].value = value
-    } else {
-        estimates.value.push({ userId: currentUserId, value })
-    }
+  if (existingEstimateIndex !== -1) {
+    estimates.value[existingEstimateIndex].value = value
+  } else {
+    estimates.value.push({ userId: currentUserId, value })
+  }
 }
 
 /**
  * 全ての見積もりをクリアし、カードを閉じます。
  */
 const clearEstimates = () => {
-    estimates.value = []
-    isOpen.value = false
+  estimates.value = []
+  isOpen.value = false
 }
 
 /**
  * カードを開きます（見積もり値を表示します）。
  */
 const openCards = () => {
-    isOpen.value = true
+  isOpen.value = true
 }
 </script>
 
 <template>
-    <div class="scrum-poker-board">
-        <header class="board-header">
-            <StatisticsDisplay
-                :average="average"
-                :median="median"
-                :min="min"
-                :max="max"
-                :mode="mode"
-            />
-            <div class="controls">
-                <BaseButton label="CLEAR" @click="clearEstimates" />
-                <BaseButton label="OPEN" @click="openCards" :disabled="isOpen" />
-            </div>
-        </header>
+  <div class="scrum-poker-board">
+    <header class="board-header">
+      <StatisticsDisplay :average="average" :median="median" :min="min" :max="max" :mode="mode" />
+      <div class="controls">
+        <BaseButton label="CLEAR" @click="clearEstimates" />
+        <BaseButton label="OPEN" @click="openCards" :disabled="isOpen" />
+      </div>
+    </header>
 
-        <UserCards :estimates="estimates" :is-open="isOpen" />
+    <UserCards :estimates="estimates" :is-open="isOpen" />
 
-        <EstimationInput @select="handleSelect" />
-    </div>
+    <EstimationInput @select="handleSelect" />
+  </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @use '../../assets/common/mixin' as m; // ミックスインをインポート
 
 .scrum-poker-board {
   padding: 10px; // SPのデフォルトパディング
 
-  @include m.pc { // PC表示のスタイル
+  @include m.pc {
+    // PC表示のスタイル
     padding: 20px;
   }
 }
@@ -109,7 +102,8 @@ const openCards = () => {
   margin-bottom: 15px;
   gap: 15px;
 
-  @include m.pc { // PC表示のスタイル
+  @include m.pc {
+    // PC表示のスタイル
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
@@ -123,7 +117,8 @@ const openCards = () => {
   gap: 10px;
   justify-content: flex-end; // SPでも右寄せにする場合
 
-  @include m.pc { // PC表示のスタイル
+  @include m.pc {
+    // PC表示のスタイル
     justify-content: flex-start; // PCではデフォルトの配置
   }
 

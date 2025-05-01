@@ -11,9 +11,9 @@ const __dirname = path.dirname(__filename)
 const gitignorePath = path.resolve(__dirname, '.gitignore')
 
 export default [
-    includeIgnoreFile(gitignorePath),
-    ...pluginVue.configs['flat/recommended'],
-    eslintConfigPrettier,
-    eslintPluginPrettierRccommended,
-    importPlugin.flatConfigs.recommended
+  includeIgnoreFile(gitignorePath),
+  ...pluginVue.configs['flat/recommended'],
+  eslintConfigPrettier,
+  eslintPluginPrettierRccommended,
+  importPlugin.flatConfigs.recommended
 ]

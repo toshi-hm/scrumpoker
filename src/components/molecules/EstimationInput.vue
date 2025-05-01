@@ -15,18 +15,19 @@ const emit = defineEmits(['select']) // 配列構文に変更
  * @param {number | string} value - 選択された値
  */
 const selectValue = (value: number | string) => {
-    emit('select', value)
+  emit('select', value)
 }
 </script>
 
 <template>
-    <div class="estimation-input">
-        <BaseButton v-for="num in fibonacci" :key="num" :label="String(num)" @click="selectValue(num)" />
-        <BaseButton label="coffee" :icon="CoffeeIcon" @click="selectValue('Coffee')" /> <!-- アイコンパスを渡す -->
-    </div>
+  <div class="estimation-input">
+    <BaseButton v-for="num in fibonacci" :key="num" :label="String(num)" @click="selectValue(num)" />
+    <BaseButton label="coffee" :icon="CoffeeIcon" @click="selectValue('Coffee')" />
+    <!-- アイコンパスを渡す -->
+  </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @use '../../assets/common/mixin' as m;
 
 .estimation-input {
@@ -35,18 +36,21 @@ const selectValue = (value: number | string) => {
   justify-items: stretch; // グリッドアイテムを幅いっぱいに広げる（ボタンサイズ統一）
   gap: 8px;
 
-  @include m.sp { // SP表示のスタイル (最大2列)
+  @include m.sp {
+    // SP表示のスタイル (最大2列)
     grid-template-columns: repeat(2, 1fr);
   }
 
-  @include m.pc { // PC表示のスタイル (5列 = 2行)
+  @include m.pc {
+    // PC表示のスタイル (5列 = 2行)
     grid-template-columns: repeat(5, 1fr);
     gap: 10px;
   }
 
   // BaseButtonコンポーネントがbutton要素をルートに持つことを想定
   // もしdivなどでラップされている場合はセレクタを調整
-  ::v-deep(button) { // BaseButton内のbutton要素にスタイルを適用
+  ::v-deep(button) {
+    // BaseButton内のbutton要素にスタイルを適用
     width: 100%; // グリッドセル幅いっぱいに広げる
     box-sizing: border-box; // パディングを含めて幅を計算
   }

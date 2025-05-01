@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import PokerCard from '../atoms/PokerCard.vue';
+import PokerCard from '../atoms/PokerCard.vue'
 
 /**
  * ユーザーの見積もり情報を表すインターフェース
@@ -8,8 +8,8 @@ import PokerCard from '../atoms/PokerCard.vue';
  * @property {number | string} value - 見積もり値
  */
 interface Estimate {
-  userId: string;
-  value: number | string;
+  userId: string
+  value: number | string
 }
 
 /**
@@ -17,23 +17,18 @@ interface Estimate {
  * @props {boolean} isOpen - カードが開いているかどうか
  */
 defineProps<{
-  estimates: Estimate[];
-  isOpen: boolean;
-}>();
+  estimates: Estimate[]
+  isOpen: boolean
+}>()
 </script>
 
 <template>
   <div class="user-cards">
-    <PokerCard
-      v-for="(estimate, index) in estimates"
-      :key="index"
-      :value="estimate.value"
-      :is-open="isOpen"
-    />
+    <PokerCard v-for="(estimate, index) in estimates" :key="index" :value="estimate.value" :is-open="isOpen" />
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @use '../../assets/common/mixin' as m; // ミックスインをインポート
 
 .user-cards {
@@ -47,8 +42,11 @@ defineProps<{
   border-radius: 8px;
   flex-wrap: wrap;
   gap: 8px; // カード間のギャップ
+  background-color: rgba(255, 255, 255, 0.1); // 薄い白色の背景を追加して視認性を向上
+  border: 1px solid rgba(255, 255, 255, 0.3); // ボーダーを目立たせる
 
-  @include m.pc { // PC表示のスタイル
+  @include m.pc {
+    // PC表示のスタイル
     min-height: 300px; // PCでの最小高さを増やす
     margin-top: 20px;
     padding: 10px;
