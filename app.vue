@@ -1,6 +1,17 @@
+<script lang="ts" setup>
+import ScrumPokerBoard from './src/components/organisms/ScrumPokerBoard.vue'
+</script>
+
 <template>
-  <div class="container mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold text-center mb-8">スクラムポーカー</h1>
-    <ScrumPokerApp />
-  </div>
+    <div>
+        <ScrumPokerBoard />
+    </div>
 </template>
+
+<style lang="scss">
+/* Global styles if any */
+body {
+    margin: 0;
+    background-color: #f0f0f0;
+}
+</style>
