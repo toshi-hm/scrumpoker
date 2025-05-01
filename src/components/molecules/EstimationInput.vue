@@ -28,11 +28,17 @@ const selectValue = (value: number | string) => {
 </template>
 
 <style lang="scss">
+@use '../../assets/common/mixin' as m; // ミックスインをインポート
+
 .estimation-input {
     margin-top: 20px;
     display: flex;
-    gap: 10px;
+    gap: 8px; // SPのギャップ
     flex-wrap: wrap;
     justify-content: center;
+
+    @include m.pc { // PC表示のスタイル
+        gap: 10px;
+    }
 }
 </style>

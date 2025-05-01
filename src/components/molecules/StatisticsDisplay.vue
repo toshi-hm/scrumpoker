@@ -26,17 +26,31 @@ defineProps<{
 </template>
 
 <style lang="scss">
+@use '../../assets/common/mixin' as m; // ミックスインをインポート
+
 .statistics-display {
-    display: flex;
-    gap: 15px;
-    font-size: 14px;
-    color: #555;
-    padding: 10px;
+    display: grid; // SPではグリッド表示で見やすくする
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); // 列を自動調整
+    gap: 8px 10px; // SPでのギャップ (縦 横)
+    font-size: 13px; // SPでのフォントサイズ
+    padding: 8px; // SPでのパディング
     background-color: #f9f9f9;
     border-radius: 4px;
 
+    @include m.pc { // PC表示のスタイル
+        display: flex; // PCではフレックス表示に戻す
+        gap: 15px;
+        font-size: 14px;
+        padding: 10px;
+    }
+
     span {
         font-weight: bold;
+        text-align: center; // グリッド表示のため中央揃え
+
+        @include m.pc {
+            text-align: left; // PCでは左揃えに戻す
+        }
     }
 }
 </style>

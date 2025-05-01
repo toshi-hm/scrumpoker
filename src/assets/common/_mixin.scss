@@ -1,0 +1,16 @@
+// ブレークポイントの定義
+$breakpoint-pc: 768px;
+
+// PC表示用のメディアクエリミックスイン
+@mixin pc {
+  @media screen and (min-width: $breakpoint-pc) {
+    @content;
+  }
+}
+
+// スマートフォン表示用のメディアクエリミックスイン
+@mixin sp {
+  @media screen and (max-width: ($breakpoint-pc - 1)) {
+    @content;
+  }
+}

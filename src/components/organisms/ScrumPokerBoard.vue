@@ -92,38 +92,45 @@ const openCards = () => {
 </template>
 
 <style lang="scss">
+@use '../../assets/common/mixin' as m; // ミックスインをインポート
+
 .scrum-poker-board {
+  padding: 10px; // SPのデフォルトパディング
+
+  @include m.pc { // PC表示のスタイル
     padding: 20px;
-    font-family: sans-serif;
+  }
 }
 
 .board-header {
-    display: flex;
+  display: flex;
+  flex-direction: column; // SPのデフォルトは縦並び
+  align-items: stretch; // SPでは幅いっぱいに
+  margin-bottom: 15px;
+  gap: 15px;
+
+  @include m.pc { // PC表示のスタイル
+    flex-direction: row;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
-    flex-wrap: wrap;
     gap: 10px;
+  }
 }
 
 .controls {
-    display: flex;
-    gap: 10px;
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end; // SPでも右寄せにする場合
 
-    button:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-        background-color: #eee;
-    }
-}
+  @include m.pc { // PC表示のスタイル
+    justify-content: flex-start; // PCではデフォルトの配置
+  }
 
-@media (max-width: 600px) {
-    .board-header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    .controls {
-        margin-top: 10px;
-    }
+  button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: #eee;
+  }
 }
 </style>

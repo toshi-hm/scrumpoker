@@ -34,15 +34,25 @@ defineProps<{
 </template>
 
 <style lang="scss">
+@use '../../assets/common/mixin' as m; // ミックスインをインポート
+
 .user-cards {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 110px; // Ensure space even when empty
-  margin-top: 20px;
-  padding: 10px;
+  min-height: 200px; // SPでの最小高さを増やす
+  margin-top: 15px;
+  padding: 8px; // SPでのパディング
   border: 1px dashed #ccc;
   border-radius: 8px;
   flex-wrap: wrap;
+  gap: 8px; // カード間のギャップ
+
+  @include m.pc { // PC表示のスタイル
+    min-height: 300px; // PCでの最小高さを増やす
+    margin-top: 20px;
+    padding: 10px;
+    gap: 10px; // PCでのカード間ギャップ
+  }
 }
 </style>
