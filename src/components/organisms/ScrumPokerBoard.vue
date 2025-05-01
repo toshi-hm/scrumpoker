@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref, onMounted, watch } from 'vue' // onMounted をインポート
+import { v4 as uuidv4 } from 'uuid' // uuid をインポート
 import BaseButton from '../atoms/BaseButton.vue'
 import EstimationInput from '../molecules/EstimationInput.vue'
 import UserCards from '../molecules/UserCards.vue'
@@ -33,36 +34,45 @@ const isOpen = ref(false)
  * 現在のユーザーID（仮）
  * @type {string}
  */
-const currentUserId = 'current-user'
+ const currentUserId = ref('')
 const userName = ref('')
 
 // usePokerStatistics に isOpen を渡す
 const { average, median, min, max, mode } = usePokerStatistics(estimates, isOpen)
 
+// sessionStorage のキー
+const ESTIMATES_STORAGE_KEY = 'scrumpoker-estimates'
+const IS_OPEN_STORAGE_KEY = 'scrumpoker-isOpen' // isOpen 用のキーを追加
+const USER_ID_STORAGE_KEY = 'scrumpoker-userId'
+const USER_NAME_STORAGE_KEY_PREFIX = 'scrumpoker-userName-'
+
 /**
  * 見積もり値が選択されたときのハンドラー
- * 既存の見積もりがあれば更新、なければ追加します。
- * @param {number | string} value - 選択された値
  */
  const handleSelect = (value: number | string) => {
-  const nameToUse = userName.value || `User-${currentUserId.slice(-4)}` // 入力がない場合はデフォルト名
-  const existingEstimateIndex = estimates.value.findIndex((e) => e.userId === currentUserId)
+  if (!currentUserId.value) return
+
+  const nameToUse = userName.value || `User-${currentUserId.value.slice(-4)}`
+  sessionStorage.setItem(`${USER_NAME_STORAGE_KEY_PREFIX}${currentUserId.value}`, nameToUse)
+
+  const existingEstimateIndex = estimates.value.findIndex((e) => e.userId === currentUserId.value)
   if (existingEstimateIndex !== -1) {
-    // 既存の見積もりを更新（ユーザー名も更新）
     estimates.value[existingEstimateIndex].value = value
     estimates.value[existingEstimateIndex].userName = nameToUse
   } else {
-    // 新しい見積もりを追加
-    estimates.value.push({ userId: currentUserId, userName: nameToUse, value })
+    estimates.value.push({ userId: currentUserId.value, userName: nameToUse, value })
   }
 }
 
 /**
  * 全ての見積もりをクリアし、カードを閉じます。
  */
-const clearEstimates = () => {
+ const clearEstimates = () => {
   estimates.value = []
   isOpen.value = false
+  // sessionStorage から estimates と isOpen データも削除
+  sessionStorage.removeItem(ESTIMATES_STORAGE_KEY)
+  sessionStorage.removeItem(IS_OPEN_STORAGE_KEY) // isOpen の状態も削除
 }
 
 /**
@@ -71,6 +81,57 @@ const clearEstimates = () => {
 const openCards = () => {
   isOpen.value = true
 }
+// estimates の変更を監視して sessionStorage に保存
+watch(estimates, (newEstimates) => {
+  sessionStorage.setItem(ESTIMATES_STORAGE_KEY, JSON.stringify(newEstimates))
+}, { deep: true }) // deep: true で配列内のオブジェクトの変更も検知
+// isOpen の変更を監視して sessionStorage に保存
+watch(isOpen, (newIsOpen) => {
+  sessionStorage.setItem(IS_OPEN_STORAGE_KEY, JSON.stringify(newIsOpen))
+})
+
+// コンポーネントマウント時の処理
+onMounted(() => {
+  // ユーザーIDの取得・生成
+  let userId = sessionStorage.getItem(USER_ID_STORAGE_KEY)
+  if (!userId) {
+    userId = uuidv4()
+    sessionStorage.setItem(USER_ID_STORAGE_KEY, userId)
+  }
+  currentUserId.value = userId
+
+  // ユーザー名の復元
+  const storedUserName = sessionStorage.getItem(`${USER_NAME_STORAGE_KEY_PREFIX}${userId}`)
+  if (storedUserName) {
+    userName.value = storedUserName
+  }
+
+  // estimates の復元
+  const storedEstimates = sessionStorage.getItem(ESTIMATES_STORAGE_KEY)
+  if (storedEstimates) {
+    try {
+      estimates.value = JSON.parse(storedEstimates)
+    } catch (e) {
+      console.error('Failed to parse estimates from sessionStorage:', e)
+      sessionStorage.removeItem(ESTIMATES_STORAGE_KEY) // パース失敗時はデータを削除
+    }
+  }
+
+  // isOpen の復元
+  const storedIsOpen = sessionStorage.getItem(IS_OPEN_STORAGE_KEY)
+  if (storedIsOpen) {
+    try {
+      isOpen.value = JSON.parse(storedIsOpen)
+    } catch (e) {
+      console.error('Failed to parse isOpen from sessionStorage:', e)
+      sessionStorage.removeItem(IS_OPEN_STORAGE_KEY) // パース失敗時はデータを削除
+      isOpen.value = false // デフォルト値に戻す
+    }
+  } else {
+    // 保存された値がない場合はデフォルトで閉じる
+    isOpen.value = false
+  }
+})
 </script>
 
 <template>
