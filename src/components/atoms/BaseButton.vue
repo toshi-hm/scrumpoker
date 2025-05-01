@@ -1,8 +1,14 @@
 <script lang="ts" setup>
+/**
+ * @props {string} label - ボタンに表示するテキスト
+ */
 defineProps<{
     label: string
 }>()
 
+/**
+ * @emits click - ボタンがクリックされたときに発行されるイベント
+ */
 const emit = defineEmits<{
     (e: 'click'): void
 }>()

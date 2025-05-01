@@ -1,102 +1,83 @@
 <script lang="ts" setup>
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import BaseButton from '../atoms/BaseButton.vue'
 import EstimationInput from '../molecules/EstimationInput.vue'
 import UserCards from '../molecules/UserCards.vue'
 import StatisticsDisplay from '../molecules/StatisticsDisplay.vue'
+import { usePokerStatistics } from '../../composables/usePokerStatistics'
 
+/**
+ * ユーザーの見積もり情報を表すインターフェース
+ * @interface Estimate
+ * @property {string} userId - ユーザーID
+ * @property {number | string} value - 見積もり値
+ */
 interface Estimate {
-    userId: string // 仮のユーザーID
+    userId: string
     value: number | string
 }
 
+/**
+ * 現在の見積もりリスト
+ * @type {Ref<Estimate[]>}
+ */
 const estimates = ref<Estimate[]>([])
+/**
+ * カードが開いているかどうかの状態
+ * @type {Ref<boolean>}
+ */
 const isOpen = ref(false)
-let userIdCounter = 0 // 簡単なユーザーID生成用
+/**
+ * 現在のユーザーID（仮）
+ * @type {string}
+ */
+const currentUserId = 'current-user'
 
+// usePokerStatistics に isOpen を渡す
+const { average, median, min, max, mode } = usePokerStatistics(estimates, isOpen)
+
+/**
+ * 見積もり値が選択されたときのハンドラー
+ * 既存の見積もりがあれば更新、なければ追加します。
+ * @param {number | string} value - 選択された値
+ */
 const handleSelect = (value: number | string) => {
-    // 実際のアプリケーションでは、認証されたユーザーIDを使用します
-    const userId = `user-${userIdCounter++}`
-    // 同じユーザーが再度選択した場合、更新する（ここでは単純に追加）
-    estimates.value.push({ userId, value })
+    const existingEstimateIndex = estimates.value.findIndex(
+        (e) => e.userId === currentUserId
+    )
+
+    if (existingEstimateIndex !== -1) {
+        estimates.value[existingEstimateIndex].value = value
+    } else {
+        estimates.value.push({ userId: currentUserId, value })
+    }
 }
 
+/**
+ * 全ての見積もりをクリアし、カードを閉じます。
+ */
 const clearEstimates = () => {
     estimates.value = []
     isOpen.value = false
-    userIdCounter = 0 // リセット
 }
 
+/**
+ * カードを開きます（見積もり値を表示します）。
+ */
 const openCards = () => {
     isOpen.value = true
 }
-
-const numericEstimates = computed(() => {
-    return estimates.value.map((e) => e.value).filter((v): v is number => typeof v === 'number')
-})
-
-const calculateAverage = computed(() => {
-    if (!numericEstimates.value.length) return null
-    const sum = numericEstimates.value.reduce((acc, val) => acc + val, 0)
-    return sum / numericEstimates.value.length
-})
-
-const calculateMedian = computed(() => {
-    if (!numericEstimates.value.length) return null
-    const sorted = [...numericEstimates.value].sort((a, b) => a - b)
-    const mid = Math.floor(sorted.length / 2)
-    return sorted.length % 2 !== 0 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2
-})
-
-const calculateMin = computed(() => {
-    if (!numericEstimates.value.length) return null
-    return Math.min(...numericEstimates.value)
-})
-
-const calculateMax = computed(() => {
-    if (!numericEstimates.value.length) return null
-    return Math.max(...numericEstimates.value)
-})
-
-const calculateMode = computed(() => {
-    if (!estimates.value.length) return null
-    const counts: Record<string | number, number> = {}
-    let maxFreq = 0
-    estimates.value.forEach((e) => {
-        counts[e.value] = (counts[e.value] || 0) + 1
-        if (counts[e.value] > maxFreq) {
-            maxFreq = counts[e.value]
-        }
-    })
-
-    if (maxFreq <= 1 && estimates.value.length > 1) return null // No unique mode or only one estimate
-
-    const modes = Object.entries(counts)
-        .filter(([_, freq]) => freq === maxFreq)
-        .map(([valueStr]) => {
-            // Try converting back to number if possible
-            const num = Number(valueStr)
-            return isNaN(num) ? valueStr : num
-        })
-
-    // If all values are unique and more than one estimate exists, technically no mode
-    if (modes.length === estimates.value.length && estimates.value.length > 1) {
-        return null
-    }
-
-    return modes.length > 0 ? modes : null
-})
 </script>
 
 <template>
     <div class="scrum-poker-board">
         <header class="board-header">
             <StatisticsDisplay
-                :average="calculateAverage"
-                :median="calculateMedian"
-                :min="calculateMin"
-                :max="calculateMax"
-                :mode="calculateMode"
+                :average="average"
+                :median="median"
+                :min="min"
+                :max="max"
+                :mode="mode"
             />
             <div class="controls">
                 <BaseButton label="CLEAR" @click="clearEstimates" />
@@ -121,8 +102,8 @@ const calculateMode = computed(() => {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
-    flex-wrap: wrap; // Allow wrapping on smaller screens
-    gap: 10px; // Add gap between items
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 .controls {
@@ -132,18 +113,17 @@ const calculateMode = computed(() => {
     button:disabled {
         opacity: 0.5;
         cursor: not-allowed;
-        background-color: #eee; // Ensure disabled style is clear
+        background-color: #eee;
     }
 }
 
-// Add some basic responsive adjustments if needed
 @media (max-width: 600px) {
     .board-header {
         flex-direction: column;
         align-items: flex-start;
     }
     .controls {
-        margin-top: 10px; // Add space when wrapped
+        margin-top: 10px;
     }
 }
 </style>

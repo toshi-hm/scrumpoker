@@ -1,4 +1,8 @@
 <script lang="ts" setup>
+/**
+ * @props {string | number} value - カードに表示する値（数値または"coffee"）
+ * @props {boolean} isOpen - カードが開いているか（値が表示されているか）どうか
+ */
 defineProps<{
     value: string | number
     isOpen: boolean

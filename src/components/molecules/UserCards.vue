@@ -1,11 +1,21 @@
 <script lang="ts" setup>
 import PokerCard from '../atoms/PokerCard.vue';
 
+/**
+ * ユーザーの見積もり情報を表すインターフェース
+ * @interface Estimate
+ * @property {string} userId - ユーザーID
+ * @property {number | string} value - 見積もり値
+ */
 interface Estimate {
-  userId: string; // Or some identifier for the user
+  userId: string;
   value: number | string;
 }
 
+/**
+ * @props {Estimate[]} estimates - 表示する見積もりのリスト
+ * @props {boolean} isOpen - カードが開いているかどうか
+ */
 defineProps<{
   estimates: Estimate[];
   isOpen: boolean;

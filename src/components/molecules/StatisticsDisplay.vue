@@ -1,4 +1,11 @@
 <script lang="ts" setup>
+/**
+ * @props {number | null} average - 見積もりの平均値
+ * @props {number | null} median - 見積もりの中央値
+ * @props {number | null} min - 見積もりの最小値
+ * @props {number | null} max - 見積もりの最大値
+ * @props {(number | string)[] | null} mode - 見積もりの最頻値
+ */
 defineProps<{
     average: number | null
     median: number | null

@@ -3,10 +3,18 @@ import BaseButton from '../atoms/BaseButton.vue'
 
 const fibonacci = [0, 0.5, 1, 2, 3, 5, 8, 13, 21]
 
+/**
+ * @emits select - 見積もり値が選択されたときに発行されるイベント
+ * @param {number | string} value - 選択された値
+ */
 const emit = defineEmits<{
     (e: 'select', value: number | string): void
 }>()
 
+/**
+ * 見積もり値を選択し、イベントを発行します。
+ * @param {number | string} value - 選択された値
+ */
 const selectValue = (value: number | string) => {
     emit('select', value)
 }
