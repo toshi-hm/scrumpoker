@@ -2,15 +2,18 @@
 /**
  * @props {string | number} value - カードに表示する値（数値または"coffee"）
  * @props {boolean} isOpen - カードが開いているか（値が表示されているか）どうか
+ * @props {string} [userName] - カードに関連付けられたユーザー名 (任意)
  */
 defineProps<{
   value: string | number
   isOpen: boolean
+  userName?: string // userName プロパティを追加 (任意)
 }>()
 </script>
 
 <template>
   <div class="poker-card">
+    <div v-if="userName" class="user-name">{{ userName }}</div>
     <span v-if="isOpen">{{ value }}</span>
     <span v-else>?</span>
   </div>
@@ -34,6 +37,7 @@ defineProps<{
   transition: all 0.2s ease; // アニメーション効果を追加
   cursor: pointer;
   box-sizing: border-box; /* paddingとborderをサイズ計算に含める */
+  position: relative; /* ユーザー名を配置するために追加 */
 
   &:hover {
     transform: translateY(-3px); // ホバー時に少し浮き上がる効果
@@ -45,5 +49,18 @@ defineProps<{
     box-shadow: 0 0 12px #ffd700; // 金色の光る効果
     transform: translateY(-5px); // より浮き上がる効果
   }
+}
+
+.user-name {
+  position: absolute;
+  bottom: 5px; /* カードの下部内側に変更 */
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 12px; /* ユーザー名のフォントサイズ */
+  color: #333; /* 少し濃い色に変更 */
+  white-space: nowrap; /* 名前が折り返さないように */
+  background-color: rgba(255, 255, 255, 0.7); /* 背景を少しつけて読みやすく */
+  padding: 1px 4px;
+  border-radius: 3px;
 }
 </style>

@@ -5,10 +5,12 @@ import PokerCard from '../atoms/PokerCard.vue'
  * ユーザーの見積もり情報を表すインターフェース
  * @interface Estimate
  * @property {string} userId - ユーザーID
+ * @property {string} userName - ユーザー名 // userName を追加
  * @property {number | string} value - 見積もり値
  */
 interface Estimate {
   userId: string
+  userName: string // userName を追加
   value: number | string
 }
 
@@ -24,7 +26,13 @@ defineProps<{
 
 <template>
   <div class="user-cards">
-    <PokerCard v-for="(estimate, index) in estimates" :key="index" :value="estimate.value" :is-open="isOpen" />
+    <PokerCard
+      v-for="(estimate, index) in estimates"
+      :key="index"
+      :value="estimate.value"
+      :is-open="isOpen"
+      :user-name="estimate.userName"
+    />
   </div>
 </template>
 
@@ -44,6 +52,7 @@ defineProps<{
   gap: 8px; // カード間のギャップ
   background-color: rgba(255, 255, 255, 0.1); // 薄い白色の背景を追加して視認性を向上
   border: 1px solid rgba(255, 255, 255, 0.3); // ボーダーを目立たせる
+  user-select: none;
 
   @include m.pc {
     // PC表示のスタイル
