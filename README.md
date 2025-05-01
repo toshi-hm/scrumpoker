@@ -1,75 +1,17 @@
-# Nuxt Minimal Starter
+# Scrum Poker
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+![image](https://github.com/user-attachments/assets/ec680de7-978f-4d37-8467-0f44d10cf235)
 
-## Setup
+## 概要
+スクラムイベントでのプランニングにおいて、各タスクを見積もる際の「スクラムポーカー」をWeb上で行えるようにしたアプリケーションです。
 
-Make sure to install dependencies:
+数字は0, 0.5, 1, 2, ..., 21までフィボナッチ数列の数があります。
 
-```bash
-# npm
-npm install
+見積もりの数字がわからない場合はCoffeeを押しましょう。
 
-# pnpm
-pnpm install
+## 使用方法
+右上にユーザー名を入力し、自分が思う数字のボタンをクリックしてください。
 
-# yarn
-yarn install
+カードが出揃ったあと、OPENボタンを押してカードをオープンします。
 
-# bun
-bun install
-```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+出たカードの平均値・中央値・最小値・最大値・最頻値が左上に表示されます。それをもとに各タスクの工数を確定してください。
