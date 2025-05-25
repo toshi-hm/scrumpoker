@@ -1,0 +1,42 @@
+name: Node.js CI
+
+on:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    # 必要な権限をすべて記述
+    permissions:
+      contents: read
+      pull-requests: write
+      checks: write
+
+    steps:
+      # リポジトリのコードをチェックアウト
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Node.jsの環境をセットアップ
+      # バージョン22.xを使用し、npmのキャッシュを有効化
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+          cache: 'npm'
+
+      # 依存関係のインストール
+      # package-lock.jsonに基づいて厳密にインストール
+      - name: Install dependencies
+        run: npm ci
+
+      # テストの実行とカバレッジレポートの生成
+      # coverage/coverage-summary.jsonが生成される
+      - name: Run tests with coverage
+        run: npm run test
+
+      # PRにカバレッジレポートのコメントを追加
+      # 既存のレポートを使用し、テストの再実行はスキップ
+      - name: Add coverage comment to PR
+        uses: ArtiomTr/jest-coverage-report-action@v2
