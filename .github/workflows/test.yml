@@ -1,43 +1,44 @@
 name: Node.js CI
 
-# ワークフローが実行されるタイミングを定義
 on:
-  # すべてのブランチに対するプルリクエストが作成/更新された時に実行
   pull_request:
-  # すべてのブランチへの直接プッシュ時に実行
-  push:
 
 jobs:
-  # 'test' という名前のジョブを定義
   test:
-    # ジョブを実行する仮想環境の種類
     runs-on: ubuntu-latest
-    # プルリクエストにコメントを書き込むための権限を付与
-    permissions:
-      pull-requests: write
 
-    # 実行する一連のステップ
+    # 必要な権限をすべて記述
+    permissions:
+      contents: read
+      pull-requests: write
+      checks: write
+
     steps:
-      # 1. リポジトリのコードをチェックアウトする
+      # リポジトリのコードをチェックアウト
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Node.js v22 環境をセットアップする
+      # Node.jsの環境をセットアップ
+      # バージョン22.xを使用し、npmのキャッシュを有効化
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22.x' # Node.jsのバージョンを22.xに指定
-          cache: 'npm'          # npmのキャッシュを有効にし、ビルドを高速化
+          node-version: '22.x'
+          cache: 'npm'
 
-      # 3. 依存パッケージをインストールする
+      # 依存関係のインストール
+      # package-lock.jsonに基づいて厳密にインストール
       - name: Install dependencies
-        run: npm ci # package-lock.json に基づいてクリーンインストール
+        run: npm ci
 
-      # 4. テストを実行する
+      # テストの実行とカバレッジレポートの生成
+      # coverage/coverage-summary.jsonが生成される
       - name: Run tests with coverage
-        run: npm run test # package.json の "test": "jest --coverage" を実行
+        run: npm run test
 
-      # 5. カバレッジレポートをプルリクエストにコメントする
+      # PRにカバレッジレポートのコメントを追加
+      # 既存のレポートを使用し、テストの再実行はスキップ
       - name: Add coverage comment to PR
-        # ArtiomTr/jest-coverage-report-action を使用
         uses: ArtiomTr/jest-coverage-report-action@v2
+        with:
+          skip-step: all
