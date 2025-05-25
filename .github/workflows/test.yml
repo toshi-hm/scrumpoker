@@ -40,5 +40,3 @@ jobs:
       # 既存のレポートを使用し、テストの再実行はスキップ
       - name: Add coverage comment to PR
         uses: ArtiomTr/jest-coverage-report-action@v2
-        with:
-          skip-step: all
