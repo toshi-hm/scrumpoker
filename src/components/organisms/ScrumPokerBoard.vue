@@ -1,24 +1,12 @@
 <script lang="ts" setup>
 import { ref, onMounted, watch } from 'vue' // onMounted をインポート
 import { v4 as uuidv4 } from 'uuid' // uuid をインポート
+import type { Estimate } from '~/types' // Estimate インターフェースをインポート
 import BaseButton from '../atoms/BaseButton.vue'
 import EstimationInput from '../molecules/EstimationInput.vue'
 import UserCards from '../molecules/UserCards.vue'
 import StatisticsDisplay from '../molecules/StatisticsDisplay.vue'
 import { usePokerStatistics } from '../../composables/usePokerStatistics'
-
-/**
- * ユーザーの見積もり情報を表すインターフェース
- * @interface Estimate
- * @property {string} userId - ユーザーID
- * @property {string} userName - ユーザー名
- * @property {number | string} value - 見積もり値
- */
-interface Estimate {
-  userId: string
-  userName: string // Add userName property
-  value: number | string
-}
 
 /**
  * 現在の見積もりリスト

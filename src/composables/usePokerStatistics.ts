@@ -1,15 +1,5 @@
 import { computed, type Ref } from 'vue'
-
-/**
- * ユーザーの見積もり情報を表すインターフェース
- * @interface Estimate
- * @property {string} userId - ユーザーID
- * @property {number | string} value - 見積もり値
- */
-interface Estimate {
-  userId: string
-  value: number | string
-}
+import type { Estimate } from '~/types' // Estimate インターフェースをインポート
 
 /**
  * スクラムポーカーの見積もり統計情報を計算するコンポーザブル関数
