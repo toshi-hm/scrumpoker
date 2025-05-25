@@ -10,6 +10,9 @@ jobs:
   test:
     # ジョブを実行する仮想環境の種類
     runs-on: ubuntu-latest
+    # プルリクエストにコメントを書き込むための権限を付与
+    permissions:
+      pull-requests: write
 
     # 実行する一連のステップ
     steps:
@@ -31,3 +34,8 @@ jobs:
       # 4. テストを実行する
       - name: Run tests with coverage
         run: npm run test # package.json の "test": "jest --coverage" を実行
+
+      # 5. カバレッジレポートをプルリクエストにコメントする
+      - name: Add coverage comment to PR
+        # ArtiomTr/jest-coverage-report-action を使用
+        uses: ArtiomTr/jest-coverage-report-action@v2

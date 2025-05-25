@@ -14,4 +14,9 @@ module.exports = {
     '^@/(.*)$': '<rootDir>/$1', // Adjusted to rootDir as Nuxt 3 default srcDir is root.
     '\\.(svg)$': '<rootDir>/__mocks__/fileMock.js', // Mock SVG files
   },
+  coverageReporters: [
+    "text",
+    "lcov",
+    "json-summary"
+  ],
 };
